@@ -1,10 +1,10 @@
 import os
 from matplotlib import font_manager, rc
-import matplotlib.pyplot as plt
 
 font_path = os.path.join(os.path.dirname(__file__), 'fonts', 'NanumGothic.ttf')
 font_name = font_manager.FontProperties(fname=font_path).get_name()
 rc('font', family=font_name)
+import matplotlib.pyplot as plt
 
 import folium
 import requests
