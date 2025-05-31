@@ -1,11 +1,16 @@
+import os
+if not os.path.exists("/usr/share/fonts/truetype/nanum/NanumGothic.ttf"):
+    os.system("apt-get update && apt-get install -y fonts-nanum")
+    os.system("fc-cache -f -v")
+rc('font', family='NanumGothic')
 import folium
 import requests
 import numpy as np
 import pandas as pd
 import seaborn as sns
 import streamlit as st
-import matplotlib.pyplot as plt
 from streamlit_folium import st_folium
+import matplotlib.pyplot as plt
 from matplotlib import font_manager, rc
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import MinMaxScaler, PolynomialFeatures
