@@ -11,9 +11,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import MinMaxScaler, PolynomialFeatures
 
 # 한글 폰트 설정
-font_path = "C:/Windows/Fonts/malgun.ttf"  # 윈도우 기본 폰트
-font_name = font_manager.FontProperties(fname=font_path).get_name()
-rc('font', family=font_name)
+plt.rcParams['font.family'] = ['NanumGothic', 'sans-serif']
 
 # 페이지 설정
 st.set_page_config(page_title="서울시 업종 전망 분석", layout="wide")
