@@ -1,10 +1,10 @@
 import os
-if not os.path.exists("/usr/share/fonts/truetype/nanum/NanumGothic.ttf"):
-    os.system("apt-get update && apt-get install -y fonts-nanum")
-    os.system("fc-cache -f -v")
-import matplotlib.pyplot as plt
 from matplotlib import font_manager, rc
-rc('font', family='NanumGothic')
+import matplotlib.pyplot as plt
+
+font_path = os.path.join(os.path.dirname(__file__), 'fonts', 'NanumGothic.ttf')
+font_name = font_manager.FontProperties(fname=font_path).get_name()
+rc('font', family=font_name)
 
 import folium
 import requests
