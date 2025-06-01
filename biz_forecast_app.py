@@ -259,25 +259,41 @@ elif menu == "자치구, 업종 히트맵 비교":
     # 최근 분기 선택
     recent_n = st.slider("최근 분기 개수 선택", min_value=2, max_value=8, value=4)
     recent_quarters = sorted(df['분기_정렬'].unique())[-recent_n:]
-    df_recent_n = df[df['분기_정렬'].isin(recent_quarters)]
+    df_recent_n = df[df['분기_정렬'].isin(recent_quarters)].copy()
 
-    # ✅ 여기부터 추가
     df_recent_n['행정동_코드_명'] = df_recent_n['행정동_코드_명'].str.strip()
     df_recent_n = df_recent_n.drop_duplicates(subset=['행정동_코드_명', '분기_정렬'])
 
-    # 자치구-업종별 평균 지출액 계산 후 정규화
+    # 자치구-업종별 평균 지출액 계산
     pivot_df = df_recent_n.groupby('행정동_코드_명')[far_columns].mean()
-    pivot_normalized = pivot_df.div(pivot_df.sum(axis=0), axis=1)
+    pivot_normalized = pivot_df.div(pivot_df.sum(axis=0), axis=1)  # 정규화
 
-    # 시각화
-    fig, ax = plt.subplots(figsize=(6, 4))
-    sns.heatmap(pivot_normalized, annot=True, fmt=".1%", cmap="YlGnBu", ax=ax, annot_kws={"size": 7})
-    ax.set_title(f"자치구별 업종별 지출 비중 (최근 {recent_n}개 분기)", fontsize=10)
-    ax.set_xlabel("업종", fontsize=10)
-    ax.set_ylabel("자치구", fontsize=10)
-    ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha='right', fontsize=6)
-    ax.set_yticklabels(ax.get_yticklabels(), fontsize=6)
-    st.pyplot(fig)
+    # 사용자 선택
+    selected_gu = st.selectbox("자치구 선택", pivot_normalized.index.tolist())
+    selected_cat = st.selectbox("업종 선택", pivot_normalized.columns.tolist())
+
+    # 히트맵과 표 나란히 배치
+    left_col, right_col = st.columns([2, 1])
+
+    with left_col:
+        # 시각화
+        fig, ax = plt.subplots(figsize=(8, 5))
+        sns.heatmap(pivot_normalized, annot=True, fmt=".1%", cmap="YlGnBu", ax=ax, annot_kws={"size": 7})
+        ax.set_title(f"자치구별 업종별 지출 비중 (최근 {recent_n}개 분기)", fontsize=12)
+        ax.set_xlabel("업종", fontsize=10)
+        ax.set_ylabel("자치구", fontsize=10)
+        ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha='right', fontsize=8)
+        ax.set_yticklabels(ax.get_yticklabels(), fontsize=8)
+        st.pyplot(fig)
+
+    with right_col:
+        st.subheader("🔍 선택 기준에 따른 자치구/업종별 비중 순위")
+        sorted_table = pivot_normalized[[selected_cat]].copy()
+        sorted_table.columns = ['비율']
+        sorted_table['비율_정렬'] = sorted_table['비율']  # 정렬용 수치
+        sorted_table['비율'] = (sorted_table['비율'] * 100).round(1).astype(str) + '%'
+        sorted_table = sorted_table.sort_values(by='비율_정렬', ascending=False).drop(columns='비율_정렬').reset_index()
+        st.dataframe(sorted_table, use_container_width=True)
 
 
 
