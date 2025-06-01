@@ -10,10 +10,14 @@ from matplotlib import font_manager, rc
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import MinMaxScaler, PolynomialFeatures
 
-# 한글 폰트 설정
-font_path = "C:/Windows/Fonts/malgun.ttf"  # 윈도우 기본 폰트
-font_name = font_manager.FontProperties(fname=font_path).get_name()
-rc('font', family=font_name)
+# 한글 폰트 설정 제거 (또는 주석 처리)
+# font_path = "malgun.ttf"
+# font_name = font_manager.FontProperties(fname=font_path).get_name()
+# rc('font', family=font_name)
+
+# 대신 기본 폰트에 한글이 깨지지 않도록 matplotlib 설정
+plt.rcParams['font.family'] = 'DejaVu Sans'  # 또는 나눔고딕 등이 설치된 경우 해당 이름
+
 
 # 페이지 설정
 st.set_page_config(page_title="서울시 업종 전망 분석", layout="wide")
