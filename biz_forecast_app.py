@@ -10,6 +10,11 @@ from matplotlib import font_manager, rc
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import MinMaxScaler, PolynomialFeatures
 
+# streamlit run "C:\Users\82102\Desktop\아주대\2학년 1학기\데이터분석프로그래 밍\팀과제 1학기\biz_forecast_app.py" --server.port 8083
+
+# cd "c:\Users\82102\Desktop\아주대\2학년 1학기\데이터분석프로그래밍\팀과제 1학기"
+# >> streamlit run biz_forecast_app.py --server.port 8083
+
 # 한글 폰트 설정 제거 (또는 주석 처리)
 # font_path = "malgun.ttf"
 # font_name = font_manager.FontProperties(fname=font_path).get_name()
@@ -138,6 +143,7 @@ if menu == "자치구별 지출 비교":
                     ax.set_ylabel("금액")
                     ax.tick_params(axis='x', rotation=45)
                     ax.legend()
+                    plt.legend(loc='upper left')
                     st.pyplot(fig)
                     plt.close(fig)
 
@@ -401,12 +407,6 @@ elif menu == "최종 창업 추천 도우미":
         growth_data.sort(key=lambda x: x[5], reverse=True)
         top3_data = [d for d in growth_data if d[1] > 0 and d[5] > 0][:3]
 
-        radar_labels = []
-        radar_growth = []
-        radar_stability = []
-        radar_market = []
-        radar_competition = []
-
         cols = st.columns(3)
         for idx, (col_name, growth_percent, stability_score, market_score, competition_score, final_score, y_vals, y_pred, full_quarters) in enumerate(top3_data):
             full_quarters = full_quarters[:len(y_pred)]
@@ -425,15 +425,6 @@ elif menu == "최종 창업 추천 도우미":
                 ax.legend(fontsize=8)
                 st.pyplot(fig)
                 plt.close(fig)
-
-                radar_labels.append(col_name)
-                radar_growth.append(growth_percent)
-                radar_stability.append(stability_score)
-                radar_market.append(market_score)
-                radar_competition.append(competition_score)
-
-        if radar_labels:
-            plot_radar(radar_labels, radar_growth, radar_stability, radar_market, radar_competition)
 
     elif 기준선택 == "업종 선택 → 유망 자치구":
         selected_field = st.selectbox("업종을 선택하세요", far_columns, index=far_columns.index('음식_지출_총금액'))
@@ -473,12 +464,6 @@ elif menu == "최종 창업 추천 도우미":
         growth_data.sort(key=lambda x: x[5], reverse=True)
         top3_data = [d for d in growth_data if d[1] > 0 and d[5] > 0][:3]
 
-        radar_labels = []
-        radar_growth = []
-        radar_stability = []
-        radar_market = []
-        radar_competition = []
-
         cols = st.columns(3)
         for idx, (gu_name, growth_percent, stability_score, market_score, competition_score, final_score, y_vals, y_pred, full_quarters) in enumerate(top3_data):
             full_quarters = full_quarters[:len(y_pred)]
@@ -497,12 +482,3 @@ elif menu == "최종 창업 추천 도우미":
                 ax.legend(fontsize=8)
                 st.pyplot(fig)
                 plt.close(fig)
-
-                radar_labels.append(gu_name)
-                radar_growth.append(growth_percent)
-                radar_stability.append(stability_score)
-                radar_market.append(market_score)
-                radar_competition.append(competition_score)
-
-        if radar_labels:
-            plot_radar(radar_labels, radar_growth, radar_stability, radar_market, radar_competition)
